@@ -1,28 +1,33 @@
 package com.algorithm;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-       int N = sc.nextInt();
 
-       int count = 1;
-       int strIdx = 1;
-       int endIdx = 1;
-       int sum = 1;
+        int N = sc.nextInt();
+        int M = sc.nextInt();
+        int[] uniqueNum = new int[N];
+        for (int i = 0; i < N; i++) {
+            uniqueNum[i] = sc.nextInt();
+        }
+        Arrays.sort(uniqueNum);
 
-        while (endIdx != N) {
-            if (sum == N) {
-                endIdx++;
-                count++;
-                sum += endIdx;
-            } else if (sum > N) {
-                sum -= strIdx;
+        int strIdx = 0;
+        int endIdx = N - 1;
+        int count = 0;
+
+        while (strIdx < endIdx) {
+            if (uniqueNum[strIdx] + uniqueNum[endIdx] == M) {
                 strIdx++;
+                endIdx--;
+                count++;
+            } else if (uniqueNum[strIdx] + uniqueNum[endIdx] > M) {
+                endIdx--;
             } else {
-                endIdx++;
-                sum += endIdx;
+                strIdx++;
             }
         }
         System.out.println(count);
