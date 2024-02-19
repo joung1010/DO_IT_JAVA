@@ -5,31 +5,26 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args)  {
         Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int M = sc.nextInt();
-        long res = 0L;
+       int N = sc.nextInt();
 
-        long[] sumArr = new long[N];
-        sumArr[0] = sc.nextInt();
-        for (int i = 1; i < N; i++) {
-            sumArr[i] = sumArr[i - 1] + sc.nextInt();
-        }
+       int count = 1;
+       int strIdx = 1;
+       int endIdx = 1;
+       int sum = 1;
 
-        long[] remainCntArr = new long[M];
-        for (int i = 0; i < N; i++) {
-            int remain = (int) (sumArr[i] % M);
-
-            if (remain == 0) res++;
-
-            remainCntArr[remain]++;
-        }
-
-        for (int i = 0; i < M; i++) {
-            if (remainCntArr[i] > 1) {
-                res += (remainCntArr[i] * (remainCntArr[i] - 1)) / 2;
+        while (endIdx != N) {
+            if (sum == N) {
+                endIdx++;
+                count++;
+                sum += endIdx;
+            } else if (sum > N) {
+                sum -= strIdx;
+                strIdx++;
+            } else {
+                endIdx++;
+                sum += endIdx;
             }
         }
-        System.out.println(res);
-
+        System.out.println(count);
     }
 }
