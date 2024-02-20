@@ -4,39 +4,31 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+    public static char[] DNA = {'A', 'C', 'G', 'T'};
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        int res = 0;
 
-        int N = sc.nextInt();
-        int[] uniqueNum = new int[N];
-        for (int i = 0; i < N; i++) {
-            uniqueNum[i] = sc.nextInt();
-        }
-        Arrays.sort(uniqueNum);
+        int dnaCharLen = sc.nextInt();
+        char[] passWordStr = new char[sc.nextInt()];
+        String charStr = null;
 
-        int cnt = 0;
-        for (int i = 0; i < N; i++) {
-            int strIdx = 0;
-            int endIdx = N - 1;
-            int target = uniqueNum[i];
-            while (strIdx < endIdx) {
-                if (uniqueNum[strIdx] + uniqueNum[endIdx] == target) {
-                    if (strIdx != i && endIdx != i) {
-                        cnt++;
-                        break;
-                    } else if (strIdx == i) {
-                        strIdx++;
-                    } else if (endIdx == i) {
-                        endIdx--;
-                    }
-                } else if (uniqueNum[strIdx] + uniqueNum[endIdx] < target) {
-                    strIdx++;
-                } else {
-                    endIdx--;
-                }
+        int[] chkCntArr = new int[DNA.length];
+        do {
+            charStr = sc.nextLine();
+        } while (charStr.length() != dnaCharLen);
+
+        char[] dnacharArr = charStr.toCharArray();
+        int chkResCnt = 0;
+        for (int i = 0; i < chkCntArr.length; i++) {
+            chkCntArr[i] = sc.nextInt();
+            if (chkCntArr[i] == 0) {
+                chkResCnt++;
             }
         }
-        System.out.println(cnt);
+
+
+        char[] currArr = new char[DNA.length];
 
     }
 }
