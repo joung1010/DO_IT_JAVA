@@ -8,28 +8,35 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         int N = sc.nextInt();
-        int M = sc.nextInt();
         int[] uniqueNum = new int[N];
         for (int i = 0; i < N; i++) {
             uniqueNum[i] = sc.nextInt();
         }
         Arrays.sort(uniqueNum);
 
-        int strIdx = 0;
-        int endIdx = N - 1;
-        int count = 0;
-
-        while (strIdx < endIdx) {
-            if (uniqueNum[strIdx] + uniqueNum[endIdx] == M) {
-                strIdx++;
-                endIdx--;
-                count++;
-            } else if (uniqueNum[strIdx] + uniqueNum[endIdx] > M) {
-                endIdx--;
-            } else {
-                strIdx++;
+        int cnt = 0;
+        for (int i = 0; i < N; i++) {
+            int strIdx = 0;
+            int endIdx = N - 1;
+            int target = uniqueNum[i];
+            while (strIdx < endIdx) {
+                if (uniqueNum[strIdx] + uniqueNum[endIdx] == target) {
+                    if (strIdx != i && endIdx != i) {
+                        cnt++;
+                        break;
+                    } else if (strIdx == i) {
+                        strIdx++;
+                    } else if (endIdx == i) {
+                        endIdx--;
+                    }
+                } else if (uniqueNum[strIdx] + uniqueNum[endIdx] < target) {
+                    strIdx++;
+                } else {
+                    endIdx--;
+                }
             }
         }
-        System.out.println(count);
+        System.out.println(cnt);
+
     }
 }
