@@ -1,38 +1,40 @@
 package com.algorithm;
 
 
-import java.util.Scanner;
+import java.io.*;
 import java.util.Stack;
-import java.util.stream.IntStream;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int maxNum = sc.nextInt();
-        int[] numArr = new int[maxNum];
-        IntStream.range(0, maxNum)
-                .forEach(i -> numArr[i] = sc.nextInt());
-
-        Stack<Integer> stack = new Stack<>();
-        StringBuilder printer = new StringBuilder();
-        int standard = 1;
-        boolean result = true;
-        for (int curNum : numArr) {
-            if (curNum >= standard) {
-                while (curNum >= standard) {
-                    stack.push(standard++);
-                    printer.append("+\n");
-                }
-            }
-            if (stack.isEmpty() || stack.peek() != curNum) {
-                System.out.println("NO");
-                result = false;
-                break;
-            }
-            stack.pop();
-            printer.append("-\n");
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int[] numArr = new int[n];
+        for (int i = 0; i < n; i++) {
+            numArr[i] = Integer.parseInt(br.readLine());
         }
-        if (result) System.out.println(printer.toString());
+        int[] resArr = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
+
+        for (int i = 1; i < n; i++) {
+            while (!stack.isEmpty() && numArr[stack.peek()] < numArr[i]) {
+                resArr[stack.pop()] = numArr[i];
+            }
+            stack.push(i);
+        }
+
+        while (!stack.isEmpty()) {
+            resArr[stack.pop()] = -1;
+        }
+
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        for (int i = 0; i < n; i++) {
+            bw.append(resArr[i] + " ");
+        }
+        bw.flush();
+
+        bw.close();
+        br.close();
     }
 }
 
