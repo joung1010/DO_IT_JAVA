@@ -1,23 +1,28 @@
 package com.algorithm;
 
 
-import java.util.*;
-import java.util.stream.IntStream;
+import java.io.*;
+import java.util.PriorityQueue;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
 
-        Deque<Integer> queue = new LinkedList<>();
-        IntStream.rangeClosed(1, N)
-                .forEach(queue::add);
+        PriorityQueue<Integer> queue = new PriorityQueue<>((x, y) -> {
+            int diff = Integer.compare(Math.abs(x), Math.abs(y));
+            return (diff == 0) ? Integer.compare(x, y) : diff;
+        });
 
-        while (queue.size() > 1) {
-            queue.poll();
-            queue.add(queue.poll());
+        for (int i = 0; i < n; i++) {
+            int num = Integer.parseInt(br.readLine());
+
+            if (num == 0) {
+                System.out.println(queue.isEmpty() ? "0" : queue.poll());
+            } else {
+                queue.add(num);
+            }
         }
-        System.out.println(queue.poll());
     }
 }
 
