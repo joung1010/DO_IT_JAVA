@@ -10,13 +10,23 @@ public class Main {
     public static void main(String[] args)  {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
-        List<Integer> numberList = IntStream.range(0, N)
-                .mapToObj(i -> sc.nextInt())
-                .collect(Collectors.toList());
+        int[] A = new int[N];
+        for (int i = 0; i < N; i++) {
+            A[i] = sc.nextInt();
+        }
 
-        numberList.stream()
-                .sorted()
-                .forEach(System.out::println);
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N - 1 - i; j++) {
+                if (A[j] > A[j + 1]) {
+                    int temp = A[j];
+                    A[j] = A[j + 1];
+                    A[j + 1] = temp;
+                }
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            System.out.println(A[i]);
+        }
     }
 }
 
