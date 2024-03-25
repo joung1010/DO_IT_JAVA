@@ -1,32 +1,39 @@
 package com.algorithm;
 
 
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] args)  {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int[] A = new int[N];
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(bf.readLine());
+
+        int[] numberArray = new int[N];
         for (int i = 0; i < N; i++) {
-            A[i] = sc.nextInt();
+            numberArray[i] = Integer.parseInt(bf.readLine());
         }
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N - 1 - i; j++) {
-                if (A[j] > A[j + 1]) {
-                    int temp = A[j];
-                    A[j] = A[j + 1];
-                    A[j + 1] = temp;
+        int result = 0;
+        for (int i = 1; i < numberArray.length; i++) {
+            for (int j = i; j > 0; j--) {
+                if (numberArray[j] < numberArray[j - 1]) {
+                    // 두 요소를 교환
+                    int temp = numberArray[j];
+                    numberArray[j] = numberArray[j - 1];
+                    numberArray[j - 1] = temp;
+
+                    result++;
+                } else {
+                    // 이미 작은 수가 앞에 있으므로 더 이상 확인할 필요 없음
+                    break;
                 }
             }
         }
-        for (int i = 0; i < N; i++) {
-            System.out.println(A[i]);
-        }
+
+        System.out.println(result);
+
     }
 }
 
