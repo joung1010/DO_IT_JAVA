@@ -4,38 +4,42 @@ package com.algorithm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(bf.readLine());
 
-        int[] numberArray = new int[N];
+        Node[] nodeArray = new Node[N];
         for (int i = 0; i < N; i++) {
-            numberArray[i] = Integer.parseInt(bf.readLine());
+            nodeArray[i] = new Node(Integer.parseInt(bf.readLine()), i);
         }
 
+        Arrays.sort(nodeArray);
         int result = 0;
-        for (int i = 1; i < numberArray.length; i++) {
-            for (int j = i; j > 0; j--) {
-                if (numberArray[j] < numberArray[j - 1]) {
-                    // 두 요소를 교환
-                    int temp = numberArray[j];
-                    numberArray[j] = numberArray[j - 1];
-                    numberArray[j - 1] = temp;
-
-                    result++;
-                } else {
-                    // 이미 작은 수가 앞에 있으므로 더 이상 확인할 필요 없음
-                    break;
-                }
+        for (int i = 0; i < N; i++) {
+            if (result < nodeArray[i].index - i) {
+                result = nodeArray[i].index - i;
             }
         }
+        System.out.println(result + 1);
+    }
 
-        System.out.println(result);
+    static class Node implements Comparable<Node> {
+        int value;
+        int index;
 
+        public Node(int value, int index) {
+            this.value = value;
+            this.index = index;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            return this.value - o.value;
+        }
     }
 }
-
 
 
