@@ -1,28 +1,22 @@
 package com.algorithm;
 
 
-import java.io.*;
-import java.util.PriorityQueue;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+    public static void main(String[] args)  {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        List<Integer> numberList = IntStream.range(0, N)
+                .mapToObj(i -> sc.nextInt())
+                .collect(Collectors.toList());
 
-        PriorityQueue<Integer> queue = new PriorityQueue<>((x, y) -> {
-            int diff = Integer.compare(Math.abs(x), Math.abs(y));
-            return (diff == 0) ? Integer.compare(x, y) : diff;
-        });
-
-        for (int i = 0; i < n; i++) {
-            int num = Integer.parseInt(br.readLine());
-
-            if (num == 0) {
-                System.out.println(queue.isEmpty() ? "0" : queue.poll());
-            } else {
-                queue.add(num);
-            }
-        }
+        numberList.stream()
+                .sorted()
+                .forEach(System.out::println);
     }
 }
 
