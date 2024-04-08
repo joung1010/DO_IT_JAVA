@@ -9,23 +9,24 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        List<Integer> waitTimeList = new ArrayList<>();
-        for (int i = 0; i < N; i++) {
-            waitTimeList.add(Integer.parseInt(st.nextToken()));
+        int totalCount = Integer.parseInt(st.nextToken());
+        int targetIdx = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+        List<Integer> integerList = new ArrayList<>();
+        for (int i = 0; i < totalCount; i++) {
+            integerList.add(Integer.parseInt(st.nextToken()));
         }
 
-        Collections.sort(waitTimeList);
-        int totalSum = 0;
-        int cumulativeSum = 0;
-        for (Integer num : waitTimeList) {
-            cumulativeSum += num;
-            totalSum += cumulativeSum;
-        }
+        int targetNum = integerList.stream()
+                .sorted()
+                .mapToInt(Integer::intValue)
+                .skip(targetIdx - 1)
+                .findFirst()
+                .orElse(0);
 
-        System.out.println(totalSum);
+        System.out.println(targetNum);
     }
 }
 
