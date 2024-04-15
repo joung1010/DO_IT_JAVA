@@ -1,65 +1,60 @@
 package com.algorithm;
 
 import java.io.*;
-import java.util.StringTokenizer;
 
 public class Main {
-    public static int[] intArr;
-    public static int[] tmpArr;
-
-    public static long count = 0;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int totalCount = Integer.parseInt(st.nextToken());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        st = new StringTokenizer(br.readLine());
-        intArr = new int[totalCount];
-        tmpArr = new int[totalCount];
-        for (int i = 0; i < totalCount; i++) {
-            intArr[i] = Integer.parseInt(st.nextToken());
+        int totalNum = Integer.parseInt(br.readLine());
+        int[] intArr = new int[totalNum];
+        for (int i = 0; i < totalNum; i++) {
+            intArr[i] = Integer.parseInt(br.readLine());
         }
+        br.close();
 
-        mergeSort(0, totalCount - 1);
-        System.out.println(count);
+        radixSort(intArr, calculateMaxDigits(intArr));
+
+        for (int value : intArr) {
+            bw.write(value + "\n");
+        }
+        bw.flush();
+        bw.close();
     }
 
-    public static void mergeSort(int s, int e) {
-        if (e - s < 1) {
-            return;
-        }
+    public static void radixSort(int[] arr, int maxDigits) {
+        int place = 1;
 
-        int m = s + (e - s) / 2;
-        mergeSort(s, m);
-        mergeSort(m + 1, e);
+        for (int digit = 0; digit < maxDigits; digit++) {
+            int[] output = new int[arr.length];
+            int[] count = new int[10];
 
-        for (int i = s; i <= e; i++) {
-            tmpArr[i] = intArr[i];
-        }
-
-        int k = s;
-        int idx1 = s;
-        int idx2 = m + 1;
-        while (idx1 <= m
-                && idx2 <= e) {
-
-            if (tmpArr[idx1] > tmpArr[idx2]) {
-                intArr[k] = tmpArr[idx2];
-                count += (m - idx1 + 1); // 왼쪽 부분 배열에서 남은 요소의 수를 더합니다.
-                idx2++;
-            } else {
-                intArr[k] = tmpArr[idx1];
-                idx1++;
+            for (int num : arr) {
+                count[(num / place) % 10]++;
             }
-            k++;
-        }
 
-        while (idx1 <= m) {
-            intArr[k++] = tmpArr[idx1++];
+            for (int i = 1; i < 10; i++) {
+                count[i] += count[i - 1];
+            }
+
+            for (int i = arr.length - 1; i >= 0; i--) {
+                int num = arr[i];
+                int index = (num / place) % 10;
+                output[count[index] - 1] = num;
+                count[index]--;
+            }
+
+            System.arraycopy(output, 0, arr, 0, arr.length);
+            place *= 10;
         }
-        while (idx2 <= e) {
-            intArr[k++] = tmpArr[idx2++];
+    }
+
+    private static int calculateMaxDigits(int[] arr) {
+        int max = 0;
+        for (int num : arr) {
+            max = Math.max(max, num);
         }
+        return Integer.toString(max).length();
     }
 }
