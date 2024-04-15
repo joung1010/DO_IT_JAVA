@@ -1,64 +1,65 @@
 package com.algorithm;
 
 import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
     public static int[] intArr;
     public static int[] tmpArr;
 
+    public static long count = 0;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int totalCount = Integer.parseInt(st.nextToken());
 
-        int totalNum = Integer.parseInt(br.readLine());
-        intArr = new int[totalNum];
-        tmpArr = new int[totalNum];
-
-        for (int i = 0; i < totalNum; i++) {
-            intArr[i] = Integer.parseInt(br.readLine());
+        st = new StringTokenizer(br.readLine());
+        intArr = new int[totalCount];
+        tmpArr = new int[totalCount];
+        for (int i = 0; i < totalCount; i++) {
+            intArr[i] = Integer.parseInt(st.nextToken());
         }
 
-        mergeSort(0, totalNum - 1);
-        for (int i = 0; i < totalNum; i++) {
-            bw.write(intArr[i] + "\n");
-        }
-
-        bw.flush();
-        bw.close();
+        mergeSort(0, totalCount - 1);
+        System.out.println(count);
     }
 
-    public static void mergeSort(int start, int end) {
-        if (start >= end) {
+    public static void mergeSort(int s, int e) {
+        if (e - s < 1) {
             return;
         }
 
-        int mid = (start + end) / 2;
+        int m = s + (e - s) / 2;
+        mergeSort(s, m);
+        mergeSort(m + 1, e);
 
-        mergeSort(start, mid);
-        mergeSort(mid + 1, end);
-
-        for (int i = start; i <= end; i++) {
+        for (int i = s; i <= e; i++) {
             tmpArr[i] = intArr[i];
         }
 
-        int grpIdx1 = start;
-        int grpIdx2 = mid + 1;
-        int target = start;
+        int k = s;
+        int idx1 = s;
+        int idx2 = m + 1;
+        while (idx1 <= m
+                && idx2 <= e) {
 
-        while (grpIdx1 <= mid && grpIdx2 <= end) {
-            if (tmpArr[grpIdx1] <= tmpArr[grpIdx2]) {
-                intArr[target++] = tmpArr[grpIdx1++];
+            if (tmpArr[idx1] > tmpArr[idx2]) {
+                intArr[k] = tmpArr[idx2];
+                count += (m - idx1 + 1); // 왼쪽 부분 배열에서 남은 요소의 수를 더합니다.
+                idx2++;
             } else {
-                intArr[target++] = tmpArr[grpIdx2++];
+                intArr[k] = tmpArr[idx1];
+                idx1++;
             }
+            k++;
         }
 
-        while (grpIdx1 <= mid) {
-            intArr[target++] = tmpArr[grpIdx1++];
+        while (idx1 <= m) {
+            intArr[k++] = tmpArr[idx1++];
         }
-
-        while (grpIdx2 <= end) {
-            intArr[target++] = tmpArr[grpIdx2++];
+        while (idx2 <= e) {
+            intArr[k++] = tmpArr[idx2++];
         }
     }
 }
