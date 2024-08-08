@@ -1,8 +1,7 @@
 package com.algorithm;
 
-import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,36 +23,21 @@ curr =  2
     *
     * */
     public static String solution(int[] numbers) {
+        List<String> numbersStrList = Arrays.stream(numbers)
+                .mapToObj(String::valueOf)
+                .collect(Collectors.toList());
 
-        final int length = numbers.length;
-        String[] numbersStrArr = new String[length];
-        for (int i = 0; i < length; i++) {
-            numbersStrArr[i] = String.valueOf(numbers[i]);
-        }
+        Collections.sort(numbersStrList, (o1, o2) -> {
+            String strNum1 = o1 + o2;
+            String strNum2 = o2 + o1;
+            return strNum2.compareTo(strNum1);
+        });
 
-        for (int i = 0; i < numbersStrArr.length; i++) {
-            int maxIdx = i;
-            for (int j = i + 1; j < length; j++) {
-                String strNum1 = numbersStrArr[j] + numbersStrArr[maxIdx];
-                String strNum2 = numbersStrArr[maxIdx] + numbersStrArr[j];
-                if (strNum1.compareTo(strNum2) > 0) {
-                    maxIdx = j;
-                }
-            }
-            String tmp = numbersStrArr[maxIdx];
-            numbersStrArr[maxIdx] = numbersStrArr[i];
-            numbersStrArr[i] = tmp;
-        }
-
-        if (numbersStrArr[0].equals("0")) {
+        if (numbersStrList.get(0).equals("0")) {
             return "0";
         }
 
-        StringBuilder result = new StringBuilder();
-        for (String strNum : numbersStrArr) {
-            result.append(strNum);
-        }
-        return result.toString();
+        return String.join("", numbersStrList);
     }
 
     public static void main(String[] args) {
