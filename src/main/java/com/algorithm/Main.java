@@ -1,47 +1,71 @@
 package com.algorithm;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
 
-    /*
-    * 6
-610 , 106
-62, 26
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-10
-102, 210 102 > 210
-maxIdx = 3
+        // queuestack의 길이
+        int N = Integer.parseInt(br.readLine());
 
+        // 각 자료구조의 동작 방식 (큐 = 0, 스택 = 1)
+        String[] pick = br.readLine().split(" ");
 
-temp = 10
-curr =  2
-6 2 10
-    *
-    * */
-    public static String solution(int[] numbers) {
-        List<String> numbersStrList = Arrays.stream(numbers)
-                .mapToObj(String::valueOf)
-                .collect(Collectors.toList());
+        // queuestack의 초기값
+        String[] initialValues = br.readLine().split(" ");
 
-        Collections.sort(numbersStrList, (o1, o2) -> {
-            String strNum1 = o1 + o2;
-            String strNum2 = o2 + o1;
-            return strNum2.compareTo(strNum1);
-        });
-
-        if (numbersStrList.get(0).equals("0")) {
-            return "0";
+        // queuestack 초기화
+        StackQue[] stackQues = new StackQue[N];
+        for (int i = 0; i < N; i++) {
+            stackQues[i] = new StackQue(Integer.parseInt(pick[i]));
+            stackQues[i].push(Integer.parseInt(initialValues[i]));
         }
 
-        return String.join("", numbersStrList);
+        // 삽입할 수열의 길이
+        int M = Integer.parseInt(br.readLine());
+
+        // 삽입할 수열
+        String[] inputValues = br.readLine().split(" ");
+
+        // 결과 출력
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < M; i++) {
+            int currentValue = Integer.parseInt(inputValues[i]);
+            for (int j = 0; j < N; j++) {
+                stackQues[j].push(currentValue);
+                currentValue = stackQues[j].pop();
+            }
+            sb.append(currentValue).append(" ");
+        }
+
+        System.out.println(sb.toString().trim());
     }
 
-    public static void main(String[] args) {
-        String solution = solution(new int[]{6, 10, 2});
-        System.out.println("solution = " + solution);
+    static class StackQue {
+        private int command; // 0 = 큐, 1 = 스택
+        private Deque<Integer> deque = new ArrayDeque<>();
+
+        public StackQue(int command) {
+            this.command = command;
+        }
+
+        public int pop() {
+            // 큐 또는 스택 방식으로 pop 동작 수행
+            return (command == 0) ? deque.pollFirst() : deque.pollLast();
+        }
+
+        public void push(int value) {
+            // 큐 또는 스택 방식으로 push 동작 수행
+            if (command == 0) {
+                deque.addLast(value); // 큐는 뒤에 삽입
+            } else {
+                deque.addLast(value); // 스택은 뒤에 삽입
+            }
+        }
     }
 }
