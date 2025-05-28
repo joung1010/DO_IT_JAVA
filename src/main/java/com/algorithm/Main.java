@@ -3,69 +3,68 @@ package com.algorithm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
 
 public class Main {
+    // 음수 인덱스를 처리하기 위해 오프셋 50을 사용
+    // visited[a+50][b+50][c+50]로 접근
+    public static int[][][] memo = new int[101][101][101];
+    public static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        // queuestack의 길이
-        int N = Integer.parseInt(br.readLine());
-
-        // 각 자료구조의 동작 방식 (큐 = 0, 스택 = 1)
-        String[] pick = br.readLine().split(" ");
-
-        // queuestack의 초기값
-        String[] initialValues = br.readLine().split(" ");
-
-        // queuestack 초기화
-        StackQue[] stackQues = new StackQue[N];
-        for (int i = 0; i < N; i++) {
-            stackQues[i] = new StackQue(Integer.parseInt(pick[i]));
-            stackQues[i].push(Integer.parseInt(initialValues[i]));
-        }
-
-        // 삽입할 수열의 길이
-        int M = Integer.parseInt(br.readLine());
-
-        // 삽입할 수열
-        String[] inputValues = br.readLine().split(" ");
-
-        // 결과 출력
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < M; i++) {
-            int currentValue = Integer.parseInt(inputValues[i]);
-            for (int j = 0; j < N; j++) {
-                stackQues[j].push(currentValue);
-                currentValue = stackQues[j].pop();
+        // 메모이제이션 배열 초기화 (-1로 초기화하여 미계산 상태 표시)
+        for (int i = 0; i <= 100; i++) {
+            for (int j = 0; j <= 100; j++) {
+                for (int k = 0; k <= 100; k++) {
+                    memo[i][j][k] = -1;
+                }
             }
-            sb.append(currentValue).append(" ");
         }
 
-        System.out.println(sb.toString().trim());
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] nums = line.split(" ");
+            int a = Integer.parseInt(nums[0]);
+            int b = Integer.parseInt(nums[1]);
+            int c = Integer.parseInt(nums[2]);
+
+            // 종료 조건
+            if (a == -1 && b == -1 && c == -1) {
+                break;
+            }
+
+            int result = w(a, b, c);
+            sb.append(String.format("w(%d, %d, %d) = %d\n", a, b, c, result));
+        }
+
+        System.out.print(sb);
     }
 
-    static class StackQue {
-        private int command; // 0 = 큐, 1 = 스택
-        private Deque<Integer> deque = new ArrayDeque<>();
-
-        public StackQue(int command) {
-            this.command = command;
+    public static int w(int a, int b, int c) {
+        // 기저 조건들
+        if (a <= 0 || b <= 0 || c <= 0) {
+            return 1;
         }
 
-        public int pop() {
-            // 큐 또는 스택 방식으로 pop 동작 수행
-            return (command == 0) ? deque.pollFirst() : deque.pollLast();
+        if (a > 20 || b > 20 || c > 20) {
+            return w(20, 20, 20);
         }
 
-        public void push(int value) {
-            // 큐 또는 스택 방식으로 push 동작 수행
-            if (command == 0) {
-                deque.addLast(value); // 큐는 뒤에 삽입
-            } else {
-                deque.addLast(value); // 스택은 뒤에 삽입
-            }
+        // 메모이제이션 확인 (유효한 범위에서만)
+        if (memo[a + 50][b + 50][c + 50] != -1) {
+            return memo[a + 50][b + 50][c + 50];
         }
+
+        int result;
+        if (a < b && b < c) {
+            result = w(a, b, c - 1) + w(a, b - 1, c - 1) - w(a, b - 1, c);
+        } else {
+            result = w(a - 1, b, c) + w(a - 1, b - 1, c) + w(a - 1, b, c - 1) - w(a - 1, b - 1, c - 1);
+        }
+
+        // 결과 저장
+        memo[a + 50][b + 50][c + 50] = result;
+        return result;
     }
 }
